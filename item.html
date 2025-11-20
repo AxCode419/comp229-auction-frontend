@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Item Details</title>
+
+    <!-- Load CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="add.html">Add Item</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="login.html">Login</a>
+  <a href="register.html">Register</a>
+</nav>
+
+<div class="page-container">
+
+<h1>Item Details</h1>
+
+<div id="details" class="details-box"></div>
+
+<script>
+// -------------------------------
+// GET ITEM DETAILS
+// -------------------------------
+
+const id = new URLSearchParams(window.location.search).get("id");
+
+async function loadItem() {
+    try {
+        const res = await fetch(`http://localhost:4000/api/auctions/${id}`);
+        const item = await res.json();
+
+        document.getElementById("details").innerHTML = `
+            <h2>${item.title}</h2>
+            <p>${item.description}</p>
+            <p><strong>Price:</strong> $${item.startingPrice}</p>
+
+            <div style="margin-top: 20px; display:flex; gap:15px;">
+                <a href="edit.html?id=${item._id}">
+                    <button>Edit</button>
+                </a>
+
+                <button onclick="deleteItem()" class="btn-danger">
+                    Delete
+                </button>
+            </div>
+        `;
+
+    } catch (error) {
+        document.getElementById("details").innerHTML =
+            "<p>Error loading item. Check backend connection.</p>";
+    }
+}
+
+loadItem();
+
+
+// -------------------------------
+// DELETE ITEM
+// -------------------------------
+
+async function deleteItem() {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        alert("You must be logged in to delete items.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    if (!confirm("Are you sure you want to delete this item?")) return;
+
+    try {
+        const res = await fetch(`http://localhost:4000/api/auctions/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        if (res.ok) {
+            alert("Item deleted.");
+            window.location.href = "index.html";
+        } else {
+            alert("Failed to delete item.");
+        }
+
+    } catch (error) {
+        alert("Error connecting to backend.");
+    }
+}
+</script>
+
+</div>
+
+</body>
+</html>

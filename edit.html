@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Item</title>
+
+    <!-- Load CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="add.html">Add Item</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="login.html">Login</a>
+  <a href="register.html">Register</a>
+</nav>
+
+<div class="page-container">
+
+<h1>Edit Item</h1>
+
+<div class="details-box">
+
+  <form id="editForm">
+
+    <input id="title" placeholder="Item Title" required>
+    <textarea id="description" placeholder="Description" rows="4" required></textarea>
+    <input id="startingPrice" placeholder="Starting Price" type="number" required>
+
+    <button style="width: 100%;">Update Item</button>
+
+    <p id="successMsg" style="color: green; margin-top: 12px; display:none;">
+      Item updated successfully!
+    </p>
+
+  </form>
+
+</div>
+
+</div>
+
+
+<script>
+// -------------------------------------------
+// GET ITEM ID FROM URL
+// -------------------------------------------
+const id = new URLSearchParams(window.location.search).get("id");
+
+
+// -------------------------------------------
+// PREFILL FORM WITH EXISTING DATA
+// -------------------------------------------
+async function loadItem() {
+  try {
+    const res = await fetch(`http://localhost:4000/api/auctions/${id}`);
+    const item = await res.json();
+
+    // Fill fields
+    document.getElementById("title").value = item.title;
+    document.getElementById("description").value = item.description;
+    document.getElementById("startingPrice").value = item.startingPrice;
+
+  } catch (error) {
+    alert("Error loading item. Check backend.");
+  }
+}
+
+loadItem();
+
+
+// -------------------------------------------
+// SUBMIT UPDATE REQUEST
+// -------------------------------------------
+document.getElementById("editForm").onsubmit = async (e) => {
+    e.preventDefault();
+    
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("You must be logged in to update items.");
+      window.location.href = "login.html";
+      return;
+    }
+
+    const data = {
+        title: document.getElementById("title").value,
+        description: document.getElementById("description").value,
+        startingPrice: document.getElementById("startingPrice").value
+    };
+
+    try {
+        const res = await fetch(`http://localhost:4000/api/auctions/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+        });
+
+        const responseData = await res.json();
+
+        if (res.ok) {
+            document.getElementById("successMsg").style.display = "block";
+            setTimeout(() => { 
+                window.location.href = `item.html?id=${id}`;
+            }, 900);
+        } else {
+            alert(responseData.message || "Failed to update item.");
+        }
+
+    } catch (error) {
+        alert("Error connecting to backend.");
+    }
+};
+</script>
+
+</body>
+</html>

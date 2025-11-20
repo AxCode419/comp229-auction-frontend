@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="add.html">Add Item</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="login.html">Login</a>
+  <a href="register.html">Register</a>
+</nav>
+
+<div class="page-container">
+
+<h1>Your Items</h1>
+
+<div id="myItems"></div>
+
+</div>
+
+<script>
+// ---------------------------------------
+// LOAD USER ITEMS
+// ---------------------------------------
+
+const token = localStorage.getItem("token");
+
+// If user not logged in → redirect to login
+if (!token) {
+    alert("You must be logged in to view your dashboard.");
+    window.location.href = "login.html";
+}
+
+async function loadMyItems() {
+    try {
+        const res = await fetch("http://localhost:4000/api/auctions/my-items", {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        const items = await res.json();
+        const container = document.getElementById("myItems");
+
+        if (!items.length) {
+            container.innerHTML = `
+                <p style="color: #777; margin-top: 10px;">
+                    You have not added any items yet.
+                </p>
+            `;
+            return;
+        }
+
+        container.innerHTML = items.map(item => `
+            <div class="item-card">
+                <h3>${item.title}</h3>
+                <p>${item.description}</p>
+                <p><strong>Price:</strong> $${item.startingPrice}</p>
+
+                <a href="item.html?id=${item._id}">
+                    <button>View Details</button>
+                </a>
+            </div>
+        `).join("");
+
+    } catch (error) {
+        console.error(error);
+        document.getElementById("myItems").innerHTML =
+            "<p>Error loading your items. Check backend.</p>";
+    }
+}
+
+loadMyItems();
+</script>
+
+</body>
+</html>

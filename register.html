@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="add.html">Add Item</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="login.html">Login</a>
+  <a href="register.html">Register</a>
+</nav>
+
+<div class="page-container">
+
+  <h1>Register</h1>
+
+  <div class="details-box">
+    <form id="regForm">
+
+      <input placeholder="Full Name" id="name" type="text" required>
+      <input placeholder="Email" id="email" type="email" required>
+      <input placeholder="Password" id="password" type="password" required>
+
+      <button style="width: 100%;">Register</button>
+
+      <p id="successMsg" style="color: green; margin-top: 10px; display:none;">
+        Registration successful! Redirecting...
+      </p>
+
+      <p id="errorMsg" style="color: red; margin-top: 10px; display:none;">
+        Something went wrong. Try again.
+      </p>
+
+    </form>
+  </div>
+
+</div>
+
+<script>
+// --------------------------------------------
+// REGISTER USER
+// --------------------------------------------
+
+document.getElementById("regForm").onsubmit = async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    try {
+        const res = await fetch("http://localhost:4000/api/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email, password })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            document.getElementById("successMsg").style.display = "block";
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 1200);
+        } else {
+            document.getElementById("errorMsg").innerText = data.message || "Registration failed";
+            document.getElementById("errorMsg").style.display = "block";
+        }
+
+    } catch (error) {
+        document.getElementById("errorMsg").innerText = "Backend connection error.";
+        document.getElementById("errorMsg").style.display = "block";
+    }
+};
+</script>
+
+</body>
+</html>

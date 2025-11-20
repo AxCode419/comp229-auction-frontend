@@ -1,0 +1,130 @@
+/* ===========================
+   GLOBAL STYLE
+=========================== */
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+    margin: 0;
+    padding: 0;
+}
+
+/* ===========================
+   NAVBAR
+=========================== */
+nav {
+    background: #ffffff;
+    padding: 15px 25px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    display: flex;
+    gap: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+nav a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #007bff;
+}
+
+/* ===========================
+   PAGE WRAPPER
+=========================== */
+.page-container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* ===========================
+   HEADINGS
+=========================== */
+h1, h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* ===========================
+   ITEM CARD STYLE
+=========================== */
+.item-card {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    width: 100%;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.08);
+    margin-bottom: 15px;
+}
+
+.item-card h3 {
+    margin: 0 0 8px;
+}
+
+/* ===========================
+   ITEM LIST CONTAINERS
+=========================== */
+#items,
+#myItems {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* ===========================
+   BUTTONS
+=========================== */
+button {
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #0056d2;
+}
+
+/* Delete Button (Red) */
+.btn-danger {
+    background: #dc3545;
+}
+
+.btn-danger:hover {
+    background: #b02a37;
+}
+
+/* ===========================
+   INPUTS & TEXTAREAS
+=========================== */
+input,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+/* ===========================
+   DETAILS BOX (Card-style)
+=========================== */
+.details-box {
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
