@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LOGIN</title>
+
+    <!-- Load CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="add.html">Add Item</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="login.html">Login</a>
+  <a href="register.html">Register</a>
+</nav>
+
+<div class="page-container">
+
+  <h1>Login</h1>
+
+  <div class="details-box">
+    <form id="loginForm">
+
+      <input placeholder="Email" id="email" type="email" required>
+      <input placeholder="Password" id="password" type="password" required>
+
+      <button style="width: 100%;">Login</button>
+
+      <p id="errorMsg" style="color: red; margin-top: 10px; display:none;">
+        Invalid email or password.
+      </p>
+
+    </form>
+  </div>
+
+</div>
+
+
+<script>
+// --------------------------------------------
+// LOGIN USER
+// --------------------------------------------
+
+document.getElementById("loginForm").onsubmit = async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    try {
+        const res = await fetch("http://localhost:4000/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.token) {
+
+            // Save JWT token
+            localStorage.setItem("token", data.token);
+
+            // Redirect to dashboard
+            window.location.href = "dashboard.html";
+
+        } else {
+            // Show error message
+            document.getElementById("errorMsg").style.display = "block";
+        }
+
+    } catch (error) {
+        console.error("Login error:", error);
+        document.getElementById("errorMsg").style.display = "block";
+    }
+};
+</script>
+
+</body>
+</html>

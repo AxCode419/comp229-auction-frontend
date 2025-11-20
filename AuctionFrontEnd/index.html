@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auction App</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<!-- NAVIGATION BAR -->
+<nav>
+  <a href="index.html">Home</a>
+  <a href="add.html">Add Item</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="login.html">Login</a>
+  <a href="register.html">Register</a>
+</nav>
+
+<div class="page-container">
+<h1>All Auction Items</h1>
+
+<!-- WHERE ITEMS WILL BE SHOWN -->
+<div id="items" class="item-list"></div>
+
+<script>
+// -------------------------------
+// GET ALL ITEMS FROM BACKEND
+// -------------------------------
+
+async function loadItems() {
+    try {
+        const res = await fetch("http://localhost:4000/api/auctions");
+        const items = await res.json();
+
+        const container = document.getElementById("items");
+
+        if (!items.length) {
+            container.innerHTML = "<p>No items available</p>";
+            return;
+        }
+
+        container.innerHTML = items.map(item => `
+            <div class="item-card">
+                <h3>${item.title}</h3>
+                <p>${item.description}</p>
+                <p><strong>Price:</strong> $${item.startingPrice}</p>
+
+                <a href="item.html?id=${item._id}">
+                    <button>View Details</button>
+                </a>
+            </div>
+        `).join("");
+
+    } catch (error) {
+        console.error("Error loading items:", error);
+        document.getElementById("items").innerHTML = 
+            "<p>Error loading items. Check backend connection.</p>";
+    }
+}
+
+// Load items on page load
+loadItems();
+</script>
+
+</div>
+
+</body>
+</html>
